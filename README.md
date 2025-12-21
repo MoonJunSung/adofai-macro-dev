@@ -1,133 +1,152 @@
-# ADOFAI Timing Calculator Library
+# 🎵 adofai-macro-dev
 
-A Dance of Fire and Ice 레벨 파일의 노트 타이밍을 계산하는 Java 라이브러리입니다.
 
-## 📋 기능
+**A Dance of Fire and Ice (얼불춤) 자동 플레이 매크로**
 
-- `.adofai` 레벨 파일 파싱 (외부 라이브러리 없이 순수 Java)
-- `angleData` / `pathData` 포맷 모두 지원
-- BPM 및 이벤트 처리:
-  - `SetSpeed` (BPM 변속)
-  - `Twirl` (방향 전환)
-  - `Pause` (일시 정지)
-  - `Hold` (홀드)
-  - `MultiPlanet` (3행성 모드)
-- 노트별 정확한 타이밍(ms) 계산
-- 자동 오프셋 계산 (countdownTicks + offset)
+---
+
+## 📋 개요
+
+이 프로그램은 리듬 게임 "A Dance of Fire and Ice (얼불춤)"의 자동 플레이 매크로입니다.  
+`.adofai` 레벨 파일을 분석하여 각 타일의 타이밍을 계산하고, 자동으로 키 입력을 수행합니다.
+
+---
+
+## ✨ 주요 기능
+
+| 기능 | 설명 |
+|------|------|
+| 📁 **레벨 파일 분석** | `.adofai` 파일을 파싱하여 BPM, 타일 각도, 이벤트 등을 분석 |
+| ⏱️ **정밀한 타이밍 계산** | 나노초 단위의 정밀한 타이밍으로 키 입력 수행 |
+| 🎯 **자동 오프셋 계산** | 카운트다운, 레벨 오프셋을 자동으로 계산하여 적용 |
+| 🎮 **전역 핫키 지원** | 게임 창에서도 F2/F3으로 매크로 제어 가능 |
+| 📌 **플로팅 버튼** | 항상 위에 표시되는 시작/정지 버튼 제공 |
+| ⚡ **다양한 이벤트 지원** | SetSpeed, Twirl, Pause, Hold, MultiPlanet 등 지원 |
+
+---
 
 ## 🚀 사용법
 
-### 커맨드라인
+### 1. 프로그램 실행
 
 ```bash
-javac ADOFAITimingLib.java
-java ADOFAITimingLib "My Level.adofai"
+# 컴파일
+javac adofai.java
+
+# 실행
+java adofai
 ```
 
-### 코드에서 사용
+### 2. 레벨 파일 불러오기
 
-```java
-import java.util.List;
+1. **"레벨 파일 불러오기"** 버튼 클릭
+2. 플레이할 `.adofai` 레벨 파일 선택
+3. 레벨 정보가 화면에 표시됨
 
-public class Example {
-    public static void main(String[] args) throws Exception {
-        // 라이브러리 인스턴스 생성
-        ADOFAITimingLib lib = new ADOFAITimingLib();
-        
-        // 레벨 파일 로드
-        lib.loadLevel("level.adofai");
-        
-        // 레벨 정보 조회
-        ADOFAITimingLib.LevelInfo info = lib.getLevelInfo();
-        System.out.println("Song: " + info.song);
-        System.out.println("BPM: " + info.bpm);
-        System.out.println("Total Tiles: " + info.totalTiles);
-        
-        // 노트 타이밍 계산
-        List<Double> timings = lib.calculateNoteTimes();
-        
-        // 각 타일의 타이밍 출력
-        for (int i = 0; i < timings.size(); i++) {
-            System.out.printf("Tile %d: %.2f ms%n", i + 1, timings.get(i));
-        }
-        
-        // 자동 오프셋 계산
-        double autoOffset = lib.calculateAutoOffset();
-        System.out.printf("Auto Offset: %.2f ms%n", autoOffset);
-    }
-}
-```
+### 3. 설정 조정 (선택사항)
 
-## 📖 API
+| 설정 | 설명 | 기본값 |
+|------|------|--------|
+| **키 설정** | 매크로가 사용할 키들 | `ASDF` |
+| **수동 오프셋** | 추가 타이밍 조정 (ms) | `0` |
+| **자동 오프셋** | 카운트다운/레벨 오프셋 자동 적용 | `✅ 활성화` |
 
-### `ADOFAITimingLib`
+### 4. 매크로 시작
 
-| 메서드 | 설명 |
+- **방법 1:** `▶ 시작` 버튼 클릭
+- **방법 2:** `F2` 키 누르기 (전역 핫키)
+- **방법 3:** 플로팅 버튼의 `START` 클릭
+
+### 5. 매크로 정지
+
+- **방법 1:** `⏹ 정지` 버튼 클릭
+- **방법 2:** `F3` 키 누르기 (전역 핫키)
+
+---
+
+## ⌨️ 단축키
+
+| 키 | 기능 | 작동 범위 |
+|----|------|-----------|
+| `F2` | 매크로 시작 | 🌐 전역 (게임 창에서도 작동) |
+| `F3` | 매크로 정지 | 🌐 전역 (게임 창에서도 작동) |
+| `Enter` | 매크로 시작 | 📌 프로그램 창 내에서만 |
+| `Q` | 매크로 정지 | 📌 프로그램 창 내에서만 |
+| `←/→` | 오프셋 ±5ms 조정 | 📌 프로그램 창 내에서만 |
+
+---
+
+## 📐 지원하는 타일 유형
+
+### 절대 각도 (Absolute Angles)
+
+| 문자 | 각도 | 문자 | 각도 | 문자 | 각도 | 문자 | 각도 |
+|------|------|------|------|------|------|------|------|
+| R | 0° | U | 90° | L | 180° | D | 270° |
+| p | 15° | q | 105° | x | 195° | Y | 285° |
+| J | 30° | G | 120° | N | 210° | B | 300° |
+| E | 45° | Q | 135° | Z | 225° | C | 315° |
+| T | 60° | H | 150° | F | 240° | M | 330° |
+| o | 75° | W | 165° | V | 255° | A | 345° |
+
+### 상대 각도 (Relative Angles)
+
+| 문자 | 각도 | 설명 |
+|------|------|------|
+| 5 | 108° | 상대 각도 |
+| 6 | 252° | 상대 각도 |
+| 7 | ~128.57° | 900/7도 |
+| 8 | ~231.43° | 360 - 900/7도 |
+| t | 60° | 상대 각도 |
+| h | 120° | 상대 각도 |
+| j | 240° | 상대 각도 |
+| y | 300° | 상대 각도 |
+| ! | - | 중간 회전 (Midspin) |
+
+---
+
+## ⚙️ 지원하는 이벤트
+
+| 이벤트 | 설명 |
 |--------|------|
-| `loadLevel(String filePath)` | .adofai 레벨 파일을 로드합니다 |
-| `getLevelInfo()` | 레벨 정보(곡명, BPM, 오프셋 등)를 반환합니다 |
-| `calculateNoteTimes()` | 모든 노트의 타이밍(ms)을 계산하여 리스트로 반환합니다 |
-| `calculateAutoOffset()` | 자동 오프셋(countdownTicks + offset)을 계산합니다 |
+| **SetSpeed** | BPM 변경 (직접 설정 또는 배율 적용) |
+| **Twirl** | 회전 방향 반전 |
+| **Pause** | 일시 정지 (추가 대기 시간) |
+| **Hold** | 홀드 노트 (추가 대기 시간) |
+| **MultiPlanet** | 3개 행성 모드 (타이밍 조정) |
 
-### `LevelInfo`
+---
 
-| 필드 | 타입 | 설명 |
-|------|------|------|
-| `song` | String | 곡 제목 |
-| `artist` | String | 아티스트 |
-| `author` | String | 레벨 제작자 |
-| `bpm` | double | 기본 BPM |
-| `offset` | int | 오프셋 (ms) |
-| `pitch` | double | 피치 (%) |
-| `countdownTicks` | int | 카운트다운 틱 수 |
-| `totalTiles` | int | 총 타일 수 |
-| `totalDuration` | double | 총 길이 (ms) |
+## 🔧 기술적 세부사항
 
-## 📁 출력 예시
+### 타이밍 정밀도
 
-```
-=== Level Info ===
-Song: Example Song
-Artist: Example Artist
-Author: LevelMaker
-BPM: 120.00
-Offset: 0 ms
-Pitch: 100%
-Countdown: 4 ticks
-Total Tiles: 256
-Duration: 128.50 seconds
+- **나노초 기반 타이밍**: `System.nanoTime()` 사용
+- **하이브리드 대기 방식**:
+  - 1ms 이상: `Thread.sleep()` (CPU 절약)
+  - 1ms 미만: `Thread.onSpinWait()` (정밀 대기)
 
-=== Note Timings (first 20) ===
-Tile   1:   500.00 ms
-Tile   2:  1000.00 ms
-Tile   3:  1500.00 ms
-...
-```
+### JSON 파싱
 
-## ⚙️ 기술 상세
+- 외부 라이브러리 없이 순수 Java로 구현
+- `.adofai` 파일의 `pathData` 및 `angleData` 지원
 
-### 지원하는 pathData 문자
+### 전역 핫키
 
-| 문자 | 각도 | 타입 |
-|------|------|------|
-| R | 0° | 절대 |
-| E | 45° | 절대 |
-| U | 90° | 절대 |
-| Q | 135° | 절대 |
-| L | 180° | 절대 |
-| Z | 225° | 절대 |
-| D | 270° | 절대 |
-| C | 315° | 절대 |
-| ! | Midspin | 특수 |
-| ... | ... | ... |
+- PowerShell + Windows API (`GetAsyncKeyState`) 사용
+- 다른 창이 활성화되어 있어도 키 감지 가능
 
-### 알고리즘
+---
 
-1. pathData → 각도 변환 (상대/절대 각도 처리)
-2. 이벤트 적용 (SetSpeed, Twirl, Pause, Hold, MultiPlanet)
-3. BPM 전파 및 방향 계산
-4. 각도 → 시간(ms) 변환: `time = (angle / 180) * (60 / bpm) * 1000`
 
-## 📜 라이선스
+## 💻 시스템 요구사항
 
-MIT License
+- **OS**: Windows (전역 핫키 기능은 Windows 전용)
+- **Java**: JDK 8 이상
+- **권한**: Robot 클래스 사용을 위한 권한 필요
+
+---
+
+## 📄 라이선스
+
+이 프로젝트는 개인 학습 및 연구 목적으로 제작되었습니다.
